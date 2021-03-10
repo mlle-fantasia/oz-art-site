@@ -1,0 +1,192 @@
+
+{{>head}}
+{{>header}}
+<div class="w-full shop-couv" style="background-image: url({{links.url_api}}{{shop.img_couv}});">
+</div>
+<div class="container mx-auto">
+  <div class="grid grid-cols-5 gap-6 mb-2">
+    <div class="col-span-1 ">
+      <img class="container-avatar-shop mx-auto"  src="{{links.url_api}}{{shop.avatar}}" alt="avatar boutique">
+    </div>
+    <div class="col-span-4 mt-4">
+      <h1 class="text-4xl">{{shop.name}}</h1>
+    </div>
+  </div>
+  <div class="grid grid-cols-5 gap-6 mb-2">
+    <div class="col-span-1 text-center">
+      <form action="{{links.url_api}}/site/shops/addlike" method="post" novalidate="novalidate" onsubmit="return validFormAddlike()" id="form_like_shop">
+        <input name="shopId"type="hidden" id="like_shop" value="{{shop._id}}">
+        <input name="userToken"type="hidden" id="user_token" value="{{token}}">
+        <button class="btn btn-primary" type="submit" id="{{shop._id}}" class="likeShop" class="btn btn-primary">J'aime cette boutique</button>
+      </form>
+    </div>
+    <div class="col-span-4">
+      <p>{{shop.description}}</p>
+      <div class="mt-3">
+          
+      </div>
+    </div>
+    </div>
+
+
+</div>
+<div class="container mx-auto">
+    <div class="grid grid-cols-5 gap-6">
+        <div class="col-span-1">
+       
+        </div>
+        <div class="col-span-4">
+          <h2 class='text-xl my-2'>Créations à la une </h2>
+          <div class="grid grid-cols-3 gap-4">
+            {{#shop.products}}
+              {{#promote}}
+              <div class="col-span-1 rounded overflow-hidden shadow-lg my-2 relative bg-white">
+                <div class="coeur likeProduct" id="{{_id}}">coeur</div>
+                <div class="container-product height200" style="background-image: url({{links.url_api}}{{main_picture}});">
+                  <!-- <img class="w-full" src="{{links.url_api}}{{main_picture}}" alt="image produit {{name}}"> -->
+                </div>
+                <div class="px-3 py-2">
+                  <div class="mb-2">{{name}}</div>
+                  <p class="font-light">
+                    {{description}}
+                  </p>
+                </div>
+                <div class="px-6 py-4">
+                  <!-- <form action="{{links.url_api}}/site/orders/addproduct" method="post" novalidate="novalidate"> -->
+                    <!-- <input name="productId" type="hidden" id="promote_addcard_{{_id}}" value="{{_id}}"> -->
+                    <button type="button" data-name="{{name}}" data-price="{{price}}" id="promote_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
+                 <!--  </form> -->
+                  <!-- <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">#photography</span> -->
+
+                </div>
+              </div>
+              {{/promote}}
+            {{/shop.products}}
+          </div>
+          <hr class="my-5">
+          <h2 class='text-xl'> Toutes les créations </h2>
+          <div class="grid grid-cols-3 gap-4">
+            {{#shop.products}}
+            <div class="col-span-1 rounded overflow-hidden shadow-lg my-2 relative bg-white">
+                <div class="coeur likeProduct" id="{{_id}}">coeur</div>
+                <div class="container-product height200" style="background-image: url({{links.url_api}}{{main_picture}});">
+                  <!-- <img class="w-full" src="{{links.url_api}}{{main_picture}}" alt="image produit {{name}}"> -->
+                </div>
+                <div class="px-3 py-2">
+                  <div class="mb-2">{{name}}</div>
+                  <p class="font-light">
+                    {{description}}
+                  </p>
+                </div>
+                <div class="px-6 py-4">
+                  <!-- <form action="{{links.url_api}}/site/orders/addproduct" method="post" novalidate="novalidate" enctype="multipart/form-data"> -->
+                   <!--  <input name="productId" type="hidden" id="product_addcard_{{_id}}" value="{{_id}}"> -->
+                    <button type="button" data-name="{{name}}" data-price="{{price}}" id="product_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
+                 <!--  </form> -->
+                  <!-- <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">#photography</span> -->
+
+                </div>
+              </div>
+            {{/shop.products}}
+          </div>
+        </div>
+    </div>
+</div>
+
+{{>footer}}
+
+<script>
+    addReady(function () {
+      // ajouter des aventlistener sur les btn ajouter au panier
+      // au click du btn on ajoute l'id du produit dans le localstorage
+      const btn = document.querySelectorAll(".btn-addcart");
+        btn.forEach((item)=>{
+            item.addEventListener("click", function(e){
+                let btnId = e.target.id
+                let productId = btnId.split("_")[2];
+                let name = e.target.dataset.name;
+                let price = e.target.dataset.price;
+                let cart = window.localStorage.getItem("cart");
+                if(cart){
+                  cart = JSON.parse(cart);
+                  let productAlreadyInCart = false;
+                  for (let p = 0; p < cart.length; p++) {
+                    const product = cart[p];
+                    if(product.product.id === productId){
+                      productAlreadyInCart = true;
+                      product.quantity++;
+                    }
+                  }
+                  if(!productAlreadyInCart)cart.push({'product': {id:productId, name:name, price:price}, quantity:1});
+                  window.localStorage.setItem("cart", JSON.stringify(cart));
+                }else{
+                  let cart = [{'product': {id:productId, name:name, price:price}, quantity:1}]
+                  window.localStorage.setItem("cart", JSON.stringify(cart));
+                }
+            })
+        })
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const success = urlParams.get('success');
+      const action = urlParams.get('action');
+      const oldaction = urlParams.get('oldaction');
+      let url = window.location.href.split("?")[0]
+      if(success === "false" &&  action === 'addlike') {
+        loginDialog( url , "addlike");
+      }
+      if(success === "true" && oldaction && oldaction === 'addlike')  {
+        // si success login, addlike correspond à l'action qui a échoué juste avant
+        // on ajout le token dans le localstorage et dans l'input, on supprime les paramettres de l'url et on submit addlike
+        const token = urlParams.get('token');
+        window.localStorage.setItem("token", token)
+        let input = document.getElementById("user_token");
+        input.value = token;
+        const form = document.getElementById("form_like_shop");
+        form.submit()
+        // messageToast( "Boutique bien ajoutée à vos favoris");
+      }
+      if(success === "false" && action === 'login') messageToast( "Connection échouée, veillez réesseyer ou vous inscrire");
+      if(success === "true" && action === 'addlike') messageToast( "Boutique bien ajoutée à vos favoris");
+      window.history.pushState({}, document.title, url);
+    });
+
+    /**
+     * Vérifie le formulaire addlike
+     * return vrai ou faut pour submit ou non le form, si non, ouvre la fenêtre de login
+     */
+    function validFormAddlike(){
+      let url = window.location.href.split("?")[0];
+      let isConnected = isConnectedUser();
+      if(isConnected){
+        let token = localStorage.getItem("token");
+        let input = document.getElementById("user_token");
+        input.value = token
+        return true;
+      }else{
+        loginDialog( url , "addlike");
+        return false;
+      }
+    }
+
+    /**
+     * Vérifie s'il y a un token dans le local storage
+     * return vrai ou faut
+     */
+    function isConnectedUser(){
+      let isConnected = false;
+      console.log('je passe dans isConnectedUser');
+      // regarder si ya des truc dans le local storage  .
+      let token = localStorage.getItem("token");
+      console.error('token',token);
+      if(token) isConnected = true;
+      return isConnected;
+    }
+
+    /**
+     * ajoute le token dans local storage
+     * pas utilisé
+     */
+    function connectUser(token){
+      window.localStorage.setItem("token", token)
+    }
+  </script>

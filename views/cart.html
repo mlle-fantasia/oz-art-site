@@ -1,0 +1,105 @@
+
+{{>head}}
+{{>header}}
+<div class="container mx-auto">
+    <h1 class="text-3xl">Votre panier</h1>
+    <div id="container-cart">
+
+
+    <table class="table-panier mt-4 w-full">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class='p-2'>Produit</th>
+                <th class='p-2'>prix unitaire</th>
+                <th class='p-2'>Quantité</th>
+                <th class='p-2'>sous-total</th>
+                <th class='p-2'></th>
+            </tr>
+        </thead>
+        <tbody  id="cart">
+           
+        </tbody>
+    </table>
+    <div class="w-full px-4 flex mt-3 justify-end">
+        <div class="w-6/12 flex">
+            <div class="flex-1">Total HT</div> 
+            <div id="total-ht" class="">0 €</div> 
+        </div> 
+    </div>
+    <div class="w-full px-4 flex mt-3 justify-end">
+        <div class="w-6/12 flex">
+            <div class="flex-1">Total TTC</div> 
+            <div id="total-ttc" class="">0 €</div> 
+        </div> 
+    </div>
+    <div class="w-full px-4 flex mt-3 justify-end">
+        <div class="w-6/12 flex">
+            <div class="flex-1">Frais de port</div> 
+            <div id="total-port" class="">0 €</div> 
+        </div> 
+    </div>
+    <div class="w-full bg-gray-200 py-2 px-4 flex mt-3 justify-end">
+        <div class="w-6/12  flex">
+            <div class="flex-1 text-2xl">Total global</div> 
+            <div id="total-global" class="text-2xl"></div> 
+        </div> 
+    </div>
+</div>
+
+</div>
+
+{{>footer}}
+
+<script>
+
+    addReady(function () {
+      let cart = JSON.parse(window.localStorage.getItem("cart"));
+      if(!cart || cart.length === 0){
+          // si le panier est vide
+          document.getElementById("container-cart").innerHTML="Votre panier est vide"
+      }else{
+        displayCartInDom(cart);
+        // listener sur les petites croix  pour supprimer  un produit du panier
+        const btn = document.querySelectorAll(".delete-product");
+        btn.forEach((item)=>{
+            item.addEventListener("click", function(e){
+                let productId = e.target.id
+                  let index;
+                  for (let p = 0; p < cart.length; p++) {
+                    const product = cart[p];
+                    if(product.product.id === productId){
+                       index = p;
+                       break;
+                    }
+                  }
+                  cart.splice(index, 1);
+                  window.localStorage.setItem("cart", JSON.stringify(cart));
+                  displayCartInDom(cart);
+               
+            })
+        })
+      }
+
+    });
+
+function displayCartInDom(cart){
+    let total = 0;
+    let divTotal = document.getElementById("total-global");
+    let trCart = document.getElementById("cart");
+   // trCart.empty();
+    for (let i = 0; i < cart.length; i++) {
+            const product = cart[i];
+            let el = `<tr class="border-b border-gray-200">
+                <td class="p-2 cursor-pointer"><a href="/">${product.product.name} </a></td>
+                <td class="p-2 text-center">${product.product.price}</td>
+                <td class="p-2 text-center">${product.quantity}</td>
+                <td class="p-2 text-center">${product.product.price * product.quantity}</td>
+                <td class="p-2 text-center cursor-pointer delete-product" id="${product.product.id}"> X </td>
+            </tr>`
+            trCart.insertAdjacentHTML("afterend", el);  
+            total += product.product.price * product.quantity;
+        }
+        divTotal.innerHTML = total + "€";
+}
+
+  </script>

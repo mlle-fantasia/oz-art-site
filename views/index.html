@@ -1,0 +1,60 @@
+
+{{>head}}
+{{>header}}
+
+<div class="bg-gray-100 pb-6">
+  <!-- présentation de ozart avec image sur fond blanc en accord avec l'actu pour  me moment en dure -->
+  <div class="w-full ozart-couv "></div>
+
+  <!-- les boutique à la netflix -->
+  <div class="container mx-auto">
+    <h2 class="text-2xl py-4">Les boutiques ozart</h2>
+  </div>
+  <div class="w-full"> 
+    <div class="grid grid-cols-7 gap-1">
+        {{#shops}}
+        <a href="{{links.url_site}}/boutique/{{slug}}">
+          <div class=" shop" id="{{_id}}">
+            <div class="container-gate flex justify-center" style="background-image: url({{links.url_api}}{{img_gate}});">
+              <!-- <img class="" src="{{links.url_api}}{{img_gate}}" alt="" > -->
+              <div class="mb-3 text-xl text-white self-end">{{name}}</div>
+            </div>
+          </div>
+        </a>
+        {{/shops}}
+    </div>
+  </div>
+
+  <!-- selection de produits -->
+  <div class="container mx-auto mt-5">
+    <h2 class="text-2xl py-4">Notre sélection de produits</h2>
+    <div class="grid grid-cols-6 gap-2">
+      {{#products}}
+      <a href="{{links.url_site}}/boutique/{{shop_slug}}/{{_id}}">
+        <div class=" shop" id="{{_id}}">
+          <div class="container-product " style="background-image: url({{links.url_api}}{{main_picture}});">
+            <!-- <img class="" src="{{links.url_api}}{{main_picture}}" alt="image du produit  {{name}}" > -->
+          </div>
+          <div class="mt-2 text-center">{{name}}</div>
+        </div>
+      </a>
+      {{/products}}
+    </div>
+  </div>
+
+  <!-- les derniers articles de blog -->
+  <div class="container">
+  </div>
+
+</div>
+{{>footer}}
+
+
+<script>
+  addReady(function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      localStorage.setItem("token", token);
+      
+  });
+</script>
