@@ -54,7 +54,7 @@
                 <div class="px-6 py-4">
                   <!-- <form action="{{links.url_api}}/site/orders/addproduct" method="post" novalidate="novalidate"> -->
                     <!-- <input name="productId" type="hidden" id="promote_addcard_{{_id}}" value="{{_id}}"> -->
-                    <button type="button" data-name="{{name}}" data-price="{{price}}" id="promote_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
+                    <button type="button" data-name="{{name}}" data-price="{{price}}" data-tva="{{tva}}" data-port="{{port}}" id="promote_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
                  <!--  </form> -->
                   <!-- <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">#photography</span> -->
 
@@ -81,7 +81,7 @@
                 <div class="px-6 py-4">
                   <!-- <form action="{{links.url_api}}/site/orders/addproduct" method="post" novalidate="novalidate" enctype="multipart/form-data"> -->
                    <!--  <input name="productId" type="hidden" id="product_addcard_{{_id}}" value="{{_id}}"> -->
-                    <button type="button" data-name="{{name}}" data-price="{{price}}" id="product_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
+                    <button type="button" data-name="{{name}}" data-price="{{price}}" data-tva="{{tva}}" data-port="{{port}}" id="product_addcard_{{_id}}" class="btn btn-primary btn-addcart">Ajouter au panier</button>
                  <!--  </form> -->
                   <!-- <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">#photography</span> -->
 
@@ -105,7 +105,9 @@
                 let btnId = e.target.id
                 let productId = btnId.split("_")[2];
                 let name = e.target.dataset.name;
-                let price = e.target.dataset.price;
+                let price = parseInt(e.target.dataset.price);
+                let tva = parseInt(e.target.dataset.tva);
+                let port = parseInt(e.target.dataset.port);
                 let cart = window.localStorage.getItem("cart");
                 if(cart){
                   cart = JSON.parse(cart);
@@ -117,10 +119,10 @@
                       product.quantity++;
                     }
                   }
-                  if(!productAlreadyInCart)cart.push({'product': {id:productId, name:name, price:price}, quantity:1});
+                  if(!productAlreadyInCart)cart.push({'product': {id:productId, name:name, price:price, tva:tva, port:port}, quantity:1});
                   window.localStorage.setItem("cart", JSON.stringify(cart));
                 }else{
-                  let cart = [{'product': {id:productId, name:name, price:price}, quantity:1}]
+                  let cart = [{'product': {id:productId, name:name, price:price, tva:tva, port:port}, quantity:1}]
                   window.localStorage.setItem("cart", JSON.stringify(cart));
                 }
             })

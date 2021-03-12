@@ -2,49 +2,64 @@
 {{>head}}
 {{>header}}
 <div class="container mx-auto">
-    <h1 class="text-3xl">Votre panier</h1>
-    <div id="container-cart">
+    <h1 class="text-3xl">Mon panier</h1>
+    <div class="grid grid-cols-3 gap-6 mb-4">
+        <div class="col-span-2">
+            <div id="container-cart">
+                <table class="table-panier mt-4 w-full">
+                    <thead>
+                        <tr class="bg-gray-200 rounded">
+                            <th class='p-2 text-left'>Produit</th>
+                            <th class='p-2'>prix unitaire</th>
+                            <th class='p-2'>Quantité</th>
+                            <th class='p-2'>sous-total</th>
+                            <th class='p-2'></th>
+                        </tr>
+                    </thead>
+                    <tbody  id="cart">
+                    
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+        <div class="col-span-1">
+            <div class="bg-vert p-2 rounded">
+                <form action="{{links.url_api}}/site/orders/create" method="post" novalidate="novalidate" onsubmit="return validFormAccessCheck('order')" id="form_order">
+                    <div class="w-full px-4  mt-5 flex justify-between">
+                        <div class="">Total TTC</div> 
+                        <div>
+                            <input style="width: 100px;" class="border rounded py-1 px-1 text-gray-700" id="total-ttc" name="total_ttc" type="number" value="0" disabled> €
+                        </div> 
+                    </div>
+                    <div class="w-full px-4  mt-3 flex justify-between">
+                        <div class="">Dont tva</div> 
+                        <div >
+                            <input style="width: 100px;" class="border rounded py-1 px-1 text-gray-700" id="total-tva" name="total_tva" type="number" value="0" disabled> €
+                        </div> 
+                    </div>
+                    <div class="w-full px-4 flex justify-between mt-3 ">
+                        <div class="">Frais de port</div> 
+                        <div class="">
+                            <input style="width: 100px;" class="border rounded py-1 px-1 text-gray-700" id="total-port" name="total_port" type="number" value="0" disabled> €
+                        </div> 
+                    </div>
+                    <div class="w-full py-2 px-4 flex justify-between mt-3 ">
+                        <div class=" text-2xl">Total global</div> 
+                        <div id="" class="text-2xl">
+                            <input style="width: 100px;" class=" py-1 px-1 text-gray-700" id="total-global" name="total_global" type="number" value="0" disabled> €
+                        </div> 
+                    </div>
+                    <div class="flex  my-3 flex justify-end">
+                        <input type="hidden" name="cart" id="input-cart" value="">
+                        <input name="userToken" type="hidden" id="user_token" value="{{token}}">
+                        <button type="submit" class="btn btn-primary text-lg bg-vert">Passer ma comande</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-
-    <table class="table-panier mt-4 w-full">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class='p-2'>Produit</th>
-                <th class='p-2'>prix unitaire</th>
-                <th class='p-2'>Quantité</th>
-                <th class='p-2'>sous-total</th>
-                <th class='p-2'></th>
-            </tr>
-        </thead>
-        <tbody  id="cart">
-           
-        </tbody>
-    </table>
-    <div class="w-full px-4 flex mt-3 justify-end">
-        <div class="w-6/12 flex">
-            <div class="flex-1">Total HT</div> 
-            <div id="total-ht" class="">0 €</div> 
-        </div> 
-    </div>
-    <div class="w-full px-4 flex mt-3 justify-end">
-        <div class="w-6/12 flex">
-            <div class="flex-1">Total TTC</div> 
-            <div id="total-ttc" class="">0 €</div> 
-        </div> 
-    </div>
-    <div class="w-full px-4 flex mt-3 justify-end">
-        <div class="w-6/12 flex">
-            <div class="flex-1">Frais de port</div> 
-            <div id="total-port" class="">0 €</div> 
-        </div> 
-    </div>
-    <div class="w-full bg-gray-200 py-2 px-4 flex mt-3 justify-end">
-        <div class="w-6/12  flex">
-            <div class="flex-1 text-2xl">Total global</div> 
-            <div id="total-global" class="text-2xl"></div> 
-        </div> 
-    </div>
-</div>
 
 </div>
 
@@ -54,11 +69,48 @@
 
     addReady(function () {
       let cart = JSON.parse(window.localStorage.getItem("cart"));
+      let inputCart = document.getElementById("input-cart")
+      inputCart.value = window.localStorage.getItem("cart");
+
       if(!cart || cart.length === 0){
           // si le panier est vide
-          document.getElementById("container-cart").innerHTML="Votre panier est vide"
+          document.getElementById("container-cart").innerHTML = "Votre panier est vide"
       }else{
         displayCartInDom(cart);
+      }
+
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const success = urlParams.get('success');
+      const action = urlParams.get('action');
+      const oldaction = urlParams.get('oldaction');
+      let url = window.location.href.split("?")[0]
+      if(success === "false" &&  action === 'order') {
+        loginDialog( url , "order");
+      }
+      if(success === "true" && oldaction && oldaction === 'order')  {
+        // si success login, order correspond à l'action qui a échoué juste avant
+        // on ajout le token dans le localstorage et dans l'input, on supprime les paramettres de l'url et on submit order
+        const token = urlParams.get('token');
+        window.localStorage.setItem("token", token)
+        let input = document.getElementById("user_token");
+        input.value = token;
+        const form = document.getElementById("form_order");
+        form.submit()
+        // messageToast( "Boutique bien ajoutée à vos favoris");
+      }
+      if(success === "false" && action === 'login') messageToast( "Connection échouée, veillez réesseyer ou vous inscrire");
+      if(success === "true" && action === 'order') messageToast( "Boutique bien ajoutée à vos favoris");
+      window.history.pushState({}, document.title, url);
+
+    });
+
+/**
+ * ajout des listener sur les petites crois pour supprimer les produit. 
+ * dans une fonction pour être appelée plusieur fois car quand ons redessine le panier, il faut redefinir les listener
+*/
+    function addlistenerDeletProduct(cart){
+        let inputCart = document.getElementById("input-cart")
         // listener sur les petites croix  pour supprimer  un produit du panier
         const btn = document.querySelectorAll(".delete-product");
         btn.forEach((item)=>{
@@ -73,20 +125,30 @@
                     }
                   }
                   cart.splice(index, 1);
+                  // on met à jour le localstorage
                   window.localStorage.setItem("cart", JSON.stringify(cart));
+                  // on met à jour l'input cart pour le form "passer la comande"
+                  inputCart.value = JSON.stringify(cart)
+                  // on met à jour le dom
                   displayCartInDom(cart);
-               
             })
         })
-      }
+    }
 
-    });
-
+/**
+ * Affiche le panier dans le dom
+ * @param {objet} cart le panier 
+*/
 function displayCartInDom(cart){
-    let total = 0;
-    let divTotal = document.getElementById("total-global");
+
+    let totalG= 0, totalTTC= 0, totalTVA = 0, totalPORT = 0;
+    let divTotalG = document.getElementById("total-global");
+    let divTotalTTC = document.getElementById("total-ttc");
+    let divTotalTVA = document.getElementById("total-tva");
+    let divTotalPORT = document.getElementById("total-port");
+
     let trCart = document.getElementById("cart");
-   // trCart.empty();
+    trCart.innerHTML = ""; 
     for (let i = 0; i < cart.length; i++) {
             const product = cart[i];
             let el = `<tr class="border-b border-gray-200">
@@ -96,10 +158,28 @@ function displayCartInDom(cart){
                 <td class="p-2 text-center">${product.product.price * product.quantity}</td>
                 <td class="p-2 text-center cursor-pointer delete-product" id="${product.product.id}"> X </td>
             </tr>`
-            trCart.insertAdjacentHTML("afterend", el);  
-            total += product.product.price * product.quantity;
+            trCart.insertAdjacentHTML("beforeEnd", el);  
+            totalTTC += product.product.price * product.quantity;
+            totalPORT += product.product.port;
+            console.log('tt',totalTTC, totalPORT);
+            totalTVA += product.product.price * (product.product.tva / 1000)
         }
-        divTotal.innerHTML = total + "€";
+        totalG += totalTTC + totalPORT;
+        divTotalG.value = totalG ;
+        divTotalTTC.value = totalTTC ;
+        divTotalPORT.value = totalPORT ;
+        divTotalTVA.value = totalTVA ;
+
+        addlistenerDeletProduct(cart);
+}
+
+
+/**
+ * calcul  
+ *  
+*/
+function calcul(cart){
+
 }
 
   </script>

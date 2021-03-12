@@ -110,6 +110,41 @@ router.get("/panier", async function (req, res, next) {
 	res.send(page);
 });
 
+// id de la commande passé en paramettre
+router.get("/panier/step2/:id", async function (req, res, next) {
+	//get commande
+	let response = await axios.get(process.env.URL_API + "/site/orders/" + req.params.id);
+	let order = response.data.order;
+	if (response.data.err) {
+		let links = elementsViews();
+		let html = fs.readFileSync("views/cart.html", "utf8");
+		let obj = {
+			links,
+			err: { err: "order_not_found", errtxt: "order non trouvé" },
+		};
+		let page = mustache.render(html, obj, include);
+		res.send(page);
+	}
+	console.log("response order", response.data.err, response.data.order);
+
+	// copie de l'adresse du user dans les adresses de la commande
+	order.shipping_name = order.billing_name = order.user.name;
+	order.shipping_firstname = order.billing_firstname = order.user.firstname;
+	order.shipping_address1 = order.billing_address1 = order.user.address1;
+	order.shipping_address2 = order.billing_address2 = order.user.address2;
+	order.shipping_city = order.billing_city = order.user.city;
+	order.shipping_zip = order.billing_zip = order.user.zip;
+	order.shipping_phone = order.user.phone;
+	let links = elementsViews();
+	let html = fs.readFileSync("views/cart2.html", "utf8");
+	let obj = {
+		links,
+		order,
+	};
+	let page = mustache.render(html, obj, include);
+	res.send(page);
+});
+
 /* page services */
 router.get("/services", function (req, res, next) {
 	let html = fs.readFileSync("views/services.html", "utf8");

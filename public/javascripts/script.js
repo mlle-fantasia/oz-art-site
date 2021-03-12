@@ -79,6 +79,41 @@ function messageDialog(dialogType, title, text, btnOk, functionOk) {
 }
 
 /**
+ * Vérifie le formulaire addlike
+ * return vrai ou faut pour submit ou non le form, si non, ouvre la fenêtre de login
+ */
+function validFormAccessCheck(action) {
+	console.log("je passe dans validFormAccessCheck");
+	let url = window.location.href.split("?")[0];
+	let isConnected = isConnectedUser();
+	console.log("isConnected", isConnected);
+	if (isConnected) {
+		let token = localStorage.getItem("token");
+		let input = document.getElementById("user_token");
+		input.value = token;
+		return true;
+	} else {
+		console.log("je passe là");
+		loginDialog(url, action);
+		return false;
+	}
+}
+
+/**
+ * Vérifie s'il y a un token dans le local storage
+ * return vrai ou faut
+ */
+function isConnectedUser() {
+	let isConnected = false;
+	console.log("je passe dans isConnectedUser dans script");
+	// regarder si ya des truc dans le local storage  .
+	let token = localStorage.getItem("token");
+	console.log("token", typeof token);
+	if (token && token !== "null") isConnected = true;
+	return isConnected;
+}
+
+/**
  *
  * Affiche de la modal de login
  *

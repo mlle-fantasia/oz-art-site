@@ -1,0 +1,181 @@
+
+{{>head}}
+{{>header}}
+<div class="container mx-auto">
+    <h1 class="text-3xl">Ma commande </h1>
+    <div id="container-cart2">
+        <p>Étape 2 sur 3  : vos coordonnées</p>
+        <form action="">
+            <div class="grid grid-cols-3 gap-6">
+                <div class="col-span-2 "> 
+                    <div class="bg-creme p-2 rounded mt-4"> 
+                        <h3 class="text-xl mt-1">Adresse de facturation</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <input  id="token" type="hidden" name="token" value="{{token}}">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_firstname">
+                                Prénom *
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_firstname" type="text" name="firstname" value="{{order.billing_firstname}}">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_name">
+                                Nom *
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_name" type="text" name="name" value="{{order.billing_name}}">
+                        </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_address1">
+                                    Adresse 
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_address1" type="text" name="address1" value="{{order.billing_address1}}">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_address2">
+                                    ligne complémentaire
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_address2" type="text" name="address2" value="{{order.billing_address2}}">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_zip">
+                                    Code postal 
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_zip" type="text" name="zip" value="{{order.billing_zip}}">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="billing_city">
+                                    Ville
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="billing_city" type="text" name="city" value="{{order.billing_city}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-jaune p-2 rounded mt-4">
+                        <h3 class="text-xl mt-1">Adresse de livraison</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_firstname">
+                                Prénom *
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_firstname" type="text" name="firstname" value="{{order.shipping_firstname}}">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_name">
+                                Nom *
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_name" type="text" name="name" value="{{order.shipping_name}}">
+                        </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_address1">
+                                    Adresse 
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_address1" type="text" name="address1" value="{{order.shipping_address1}}">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_address2">
+                                    ligne complémentaire
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_address2" type="text" name="address2" value="{{order.shipping_address2}}">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_zip">
+                                    Code postal 
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_zip" type="text" name="zip" value="{{order.shipping_zip}}">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_city">
+                                    Ville
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_city" type="text" name="city" value="{{order.shipping_city}}">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_phone">
+                                    Téléphone 
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_phone" type="text" name="phone" value="{{order.shipping_phone}}">
+                            </div>
+                            
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 mt-2">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="shipping_comment">
+                                    Commentaire 
+                                </label>
+                                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="shipping_comment" name="shipping_comment" rows="4">
+                                    {{order.shipping_comment}}
+                                </textarea>
+                                
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-1 "> 
+                    <div class="bg-vert p-2 mt-4 rounded">
+                        {{#order.orderlines}}
+                        <div class="p-2 border-b border-gray-200 flex justify-between">
+                            <div>
+                                {{product.name}}
+                            </div>
+                            <div>
+                                {{quantity}} x {{product.price}} €
+                            </div>
+                        </div>
+                        {{/order.orderlines}}
+                        <div class="w-full px-4  mt-5 flex justify-between">
+                            <div class="">Total TTC</div> 
+                            <div>
+                                {{order.total_ttc}} €
+                            </div> 
+                        </div>
+                        <div class="w-full px-4  mt-3 flex justify-between">
+                            <div class="">Dont tva</div> 
+                            <div >
+                                {{order.total_tva}} €
+                            </div> 
+                        </div>
+                        <div class="w-full px-4 flex justify-between mt-3 ">
+                            <div class="">Frais de port</div> 
+                            <div class="">
+                                {{order.shipping_taxes}} €
+                            </div> 
+                        </div>
+                        <div class="w-full py-2 px-4 flex justify-between mt-3 ">
+                            <div class=" text-2xl">Total global</div> 
+                            <div id="" class="text-2xl">
+                                {{order.total_global}} €
+                            </div> 
+                        </div>
+                        <div class="flex mt-3 flex justify-end">
+                            <input type="hidden" name="cart" id="input-cart" value="">
+                            <input name="userToken" type="hidden" id="user_token" value="{{token}}">
+                            <button type="submit" class="btn btn-primary text-lg bg-vert">Continuer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{>footer}}
+
+<script>
+    addReady(function () {
+      
+
+    });
+
+
+  </script>
